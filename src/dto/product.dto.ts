@@ -1,6 +1,10 @@
+import { IntersectionType, PartialType } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsOptional, IsInt, Min } from 'class-validator';
+import { IdDto } from '../base/api/base.dto';
 
-export class ProductDto {
+export class ProductDto extends IntersectionType(
+  PartialType(IdDto),
+) {
   @IsString()
   @IsNotEmpty()
   title: string;

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common"; 
 import { InjectRepository } from "@nestjs/typeorm";
 import { Product } from "../../entities/product.entity";
-import { Repository } from "typeorm";
+import { FindManyOptions, Repository } from "typeorm";
 import { ProductDto } from "../../dto/product.dto";
 
 @Injectable()
@@ -11,13 +11,21 @@ export class ProductService {
         private productsRepository: Repository<Product>,
     ) {}
 
-    async getProducts(page: number, limit: number): Promise<Product[]> {
+    async getProducts(page: number, limit: number, sortKey: string, sortValue: string): Promise<Product[]> {
         const skip = (page - 1) * limit
 
-        return await this.productsRepository.find({
+        const find: FindManyOptions<Product> = {
             skip: skip,
-            take: limit
-        });
+            take: limit,
+        }
+
+        if (sortKey && sortValue) {
+            find.order = {
+                [sortKey]: sortValue
+            };
+        }
+
+        return await this.productsRepository.find(find);
 
     }
 

@@ -15,10 +15,12 @@ export class ProductController {
     async getProducts(
         @Query('page') page?: number, 
         @Query('limit') limit?: number, 
+        @Query('sortKey') sortKey?: string,
+        @Query('sortValue') sortValue?: string,
     ): Promise<Product[]> {
         const pageCurrent = page || 1;  
         const limitItems = limit || 5;
-        return this.productService.getProducts(pageCurrent, limitItems);
+        return this.productService.getProducts(pageCurrent, limitItems, sortKey, sortValue);
     }
 
     @Post('/create')

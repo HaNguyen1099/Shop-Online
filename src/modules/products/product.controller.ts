@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Req, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, ValidationPipe } from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { ApiOperation, ApiTags, DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ProductDto } from "../../dto/product.dto";
@@ -12,13 +12,20 @@ export class ProductController {
 
     @Get()
     @ApiOperation({ summary: 'Get all products' })
-    getProducts(): Promise<Product[]> {
-        return this.productService.getProducts();
+    async getProducts(
+        @Query('page') page?: number, 
+        @Query('limit') limit?: number, 
+    ): Promise<Product[]> {
+        const pageCurrent = page || 1;  
+        const limitItems = limit || 5;
+        return this.productService.getProducts(pageCurrent, limitItems);
     }
 
     @Post('/create')
     @ApiOperation({ summary: 'Create product' })
-    async createProduct(@Body(new ValidationPipe()) productDto: ProductDto): Promise<Product>{
+    async createProduct(
+        @Body(new ValidationPipe()) productDto: ProductDto
+    ): Promise<Product>{
         return this.productService.createProduct(productDto);
     }
 
@@ -30,7 +37,10 @@ export class ProductController {
 
     @Patch('/edit/:id')
     @ApiOperation({ summary: 'Update product' })
-    async updateProduct(@Param('id', ParseIntPipe) id: number, @Body(new ValidationPipe()) productDto: ProductDto): Promise<Product | null>{
+    async updateProduct(
+        @Param('id', ParseIntPipe) id: number, 
+        @Body(new ValidationPipe()
+    ) productDto: ProductDto): Promise<Product | null>{
         return this.productService.updateProduct(id, productDto);
     }
 

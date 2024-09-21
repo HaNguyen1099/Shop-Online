@@ -11,8 +11,14 @@ export class ProductService {
         private productsRepository: Repository<Product>,
     ) {}
 
-    getProducts(): Promise<Product[]> {
-        return this.productsRepository.find();
+    async getProducts(page: number, limit: number): Promise<Product[]> {
+        const skip = (page - 1) * limit
+
+        return await this.productsRepository.find({
+            skip: skip,
+            take: limit
+        });
+
     }
 
     async createProduct(productDto: ProductDto): Promise<Product> {

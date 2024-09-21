@@ -17,10 +17,11 @@ export class ProductController {
         @Query('limit') limit?: number, 
         @Query('sortKey') sortKey?: string,
         @Query('sortValue') sortValue?: string,
+        @Query('keyword') keyword?: string
     ): Promise<Product[]> {
         const pageCurrent = page || 1;  
         const limitItems = limit || 5;
-        return this.productService.getProducts(pageCurrent, limitItems, sortKey, sortValue);
+        return this.productService.getProducts(pageCurrent, limitItems, sortKey, sortValue, keyword);
     }
 
     @Post('/create')

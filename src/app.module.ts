@@ -6,6 +6,7 @@ import { DataSource } from 'typeorm';
 
 import dotenv from "dotenv"
 import { configSystem } from '../config/system.config';
+import { UserModule } from './modules/users/user.module';
 
 dotenv.config()
 
@@ -22,7 +23,8 @@ dotenv.config()
       autoLoadEntities: true,
       synchronize: true
     }),
-    ProductModule
+    ProductModule,
+    UserModule
   ]
 })
 

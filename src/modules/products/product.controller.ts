@@ -34,7 +34,7 @@ export class ProductController {
 
     @Get('/detail/:id')
     @ApiOperation({ summary: 'Get product detail' })
-    detailProduct(@Param('id') id: number): Promise<Product | null> {
+    async detailProduct(@Param('id') id: number): Promise<Product> {
         return this.productService.detailProduct(id);
     }
 

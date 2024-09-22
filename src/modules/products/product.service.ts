@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common"; 
+import { Injectable, NotFoundException } from "@nestjs/common"; 
 import { InjectRepository } from "@nestjs/typeorm";
 import { Product } from "../../entities/product.entity";
 import { FindManyOptions, ILike, Repository } from "typeorm";
@@ -42,8 +42,14 @@ export class ProductService {
         return this.productsRepository.save(newProduct);
     }
 
-    detailProduct(id: number): Promise<Product | null> {
-        return this.productsRepository.findOneBy({ id });
+    async detailProduct(id: number): Promise<Product> {
+        const product = await this.productsRepository.findOneBy({ id });
+
+        if (!product) {
+            throw new NotFoundException('Product not found!')
+        }
+
+        return product
     }
 
     async updateProduct(id: number, productDto: ProductDto): Promise<Product | null>{
@@ -51,9 +57,11 @@ export class ProductService {
             id,
             ...productDto,
         });
+
         if (!product) {
-            return null;
+            throw new NotFoundException('Product not found!')
         }
+
         return this.productsRepository.save(product);
     }
 
@@ -62,6 +70,3 @@ export class ProductService {
     }
 }
 
-function removeAccents(search: any) {
-    throw new Error("Function not implemented.");
-}

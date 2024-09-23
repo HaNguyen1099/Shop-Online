@@ -1,18 +1,49 @@
-import { Injectable, NotFoundException } from "@nestjs/common"; 
-import { InjectRepository } from "@nestjs/typeorm";
-import { Product } from "../../entities/product.entity";
-import { FindManyOptions, ILike, Repository } from "typeorm";
+import { ConflictException, Injectable, NotFoundException} from "@nestjs/common";
+import { BaseService } from "../../base/service/basicService";
 import { ProductDto } from "../../dto/product.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { FindManyOptions, ILike, Repository } from "typeorm";
+import { Product } from "../../entities/product.entity";
+import { OptionDto } from "../../dto/option.dto";
 
 @Injectable()
-export class ProductService {
+export class ProductService extends BaseService<Product> {
     constructor(
         @InjectRepository(Product)
         private productsRepository: Repository<Product>,
-    ) {}
+    ){
+        super(productsRepository);
+    }
 
-    async getProducts(page: number, limit: number, sortKey: string, sortValue: string, keyword: string): Promise<Product[]> {
-        const skip = (page - 1) * limit
+    async actionPreCreate<T>(productDto: T & ProductDto){
+        const { title, ...rest } = productDto
+
+        const countProduct = await this.productsRepository.count({
+            where: { title }
+        });
+
+        if (countProduct > 0) {
+            throw new ConflictException(`Product ${title} đã tồn tại!`);
+        }
+
+        return super.actionPreCreate(productDto)
+    }
+
+    async actionPostCreate(record: Product){
+        return record
+    }
+
+    async create(productDto: ProductDto): Promise<Product> {
+        return super.create(productDto);
+    }
+
+    async actionPreList(optionDto: OptionDto){
+        const page = optionDto.page || 1; 
+        const limit = optionDto.limit || 5; 
+        const sortKey = optionDto.sortKey; 
+        const sortValue = optionDto.sortValue; 
+        const keyword = optionDto.keyword; 
+        const skip = (page - 1) * limit;
 
         const find: FindManyOptions<Product> = {
             skip: skip,
@@ -29,44 +60,74 @@ export class ProductService {
             const trimmedKeyword = keyword.trim();
 
             find.where = [
-                { title: ILike(`%${trimmedKeyword}%`) }, // Tìm kiếm trong title
+                { title: ILike(`%${trimmedKeyword}%`) }
             ];
         }
-
-        return await this.productsRepository.find(find);
-
+        return find;
     }
 
-    async createProduct(productDto: ProductDto): Promise<Product> {
-        const newProduct = this.productsRepository.create(productDto);
-        return this.productsRepository.save(newProduct);
+    async actionPostList(record: Product[]){
+        return record;
     }
 
-    async detailProduct(id: number): Promise<Product> {
-        const product = await this.productsRepository.findOneBy({ id });
-
-        if (!product) {
-            throw new NotFoundException('Product not found!')
-        }
-
-        return product
+    async getList(optionDto: OptionDto): Promise<Product[]> {
+        return super.getList(optionDto);
     }
 
-    async updateProduct(id: number, productDto: ProductDto): Promise<Product | null>{
-        const product = await this.productsRepository.preload({
-            id,
-            ...productDto,
+    async actionPreDetail(id: number){
+        const countProduct = await this.productsRepository.count({
+            where: { id }
         });
 
-        if (!product) {
-            throw new NotFoundException('Product not found!')
+        if (countProduct < 1) {
+            throw new NotFoundException(`Product không tồn tại!`);
         }
 
-        return this.productsRepository.save(product);
+        return super.actionPreDetail(id)
     }
 
-    async deleteProduct(id: number): Promise<void> {
-        await this.productsRepository.delete(id);
+    async actionPostDetail(record: Product){
+        return record;
+    }
+
+    async getDetail(id: number): Promise<Product> {
+        return super.getDetail(id);
+    }
+
+    async actionPreUpdate(id: number, productDto: ProductDto){
+        const countProduct = await this.productsRepository.count({
+            where: { id }
+        });
+
+        if (countProduct < 1) {
+            throw new NotFoundException(`Product không tồn tại!`);
+        }
+
+        return super.actionPreUpdate(id, productDto)
+    }
+
+    async actionPostUpdate(record: Product){
+        return record;
+    }
+
+    async update(id: number, productDto: ProductDto): Promise<Product> {
+        return super.update(id, productDto);
+    }
+
+    async actionPreDelete(id: number){
+        const countProduct = await this.productsRepository.count({
+            where: { id }
+        });
+
+        if (countProduct < 1) {
+            throw new NotFoundException(`Product không tồn tại!`);
+        }
+
+        return super.actionPreDelete(id)
+    }
+
+    async delete(id: number) {
+        return super.delete(id);
     }
 }
 

@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ProductModule } from './modules/products/product.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
-
 
 import dotenv from "dotenv"
 import { configSystem } from '../config/system.config';
@@ -28,6 +26,4 @@ dotenv.config()
   ]
 })
 
-export class AppModule {
-  constructor(private dataSource: DataSource) {}
-};
+export class AppModule {};

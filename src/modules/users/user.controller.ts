@@ -33,4 +33,12 @@ export class UserController {
         const user = this.userService.updateProfile(userId, userDto);
         return plainToInstance(User, user);
     }
+
+    @Delete('delete')
+    @UseGuards(JwtAuthGuard)
+    @ApiOperation({ summary: 'Delete account' })
+    async deleteUser(@Req() req) {
+        const userId = req.user.userId;
+        return this.userService.deleteUser(userId);
+    }
 }

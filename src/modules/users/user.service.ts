@@ -45,5 +45,9 @@ export class UserService {
 
         return this.usersRepository.findOneBy({id});
     }
+
+    async deleteUser(id: number) {
+        return await this.usersRepository.delete({id: id})
+    }
 }
 

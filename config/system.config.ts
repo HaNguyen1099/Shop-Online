@@ -12,6 +12,9 @@ export class Config {
     postgresUser = process.env.POSTGRES_USER
     postgresPassword = process.env.POSTGRES_PASSWORD
     postgresDatabase = process.env.POSTGRES_DATABASE
+
+    // JWT 
+    JWTKey = process.env.JWT_KEY
 }
 
 export const configSystem = new Config();

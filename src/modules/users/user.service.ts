@@ -1,9 +1,9 @@
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common"; 
+import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common"; 
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "../../entities/user.entity";
-import { UserDto } from "../../dto/user.dto";
-import * as bcrypt from 'bcrypt';
+import { UserRegisterDto } from "../../dto/user.dto";
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -12,14 +12,18 @@ export class UserService {
         private usersRepository: Repository<User>,
     ) {}
 
-    async register(userDto: UserDto): Promise<User> {
+    async register(userDto: UserRegisterDto): Promise<User> {
         const { password, email, ...rest } = userDto;
 
-        const hashPassword = await bcrypt.hash(password, 10);
+        const salt = await bcrypt.genSalt();
 
-        const existEmail = await this.usersRepository.findOneBy({ email }) 
+        const hashPassword = await bcrypt.hash(password, salt);
 
-        if (existEmail) {
+        const countEmail = await this.usersRepository.count({
+            where: { email }
+        });
+
+        if (countEmail > 0) {
             throw new ConflictException(`Email ${email} đã được sử dụng.`);
         }
 

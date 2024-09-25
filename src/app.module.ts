@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import dotenv from "dotenv"
 import { configSystem } from '../config/system.config';
 import { UserModule } from './modules/users/user.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 dotenv.config()
 
@@ -22,7 +23,8 @@ dotenv.config()
       synchronize: true
     }),
     ProductModule,
-    UserModule
+    AuthModule,
+    UserModule,
   ]
 })
 

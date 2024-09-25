@@ -2,7 +2,7 @@ import { IntersectionType, PartialType } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 import { IdDto } from '../base/api/base.dto';
 
-export class UserDto extends IntersectionType(
+export class UserRegisterDto extends IntersectionType(
   PartialType(IdDto),
 ) {
   @IsString()
@@ -20,5 +20,15 @@ export class UserDto extends IntersectionType(
 
   @IsString()
   @IsOptional()
-  name?: string;
+  name: string;
+}
+
+export class UserLoginDto {
+  @IsString()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 }

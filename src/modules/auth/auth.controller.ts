@@ -1,10 +1,11 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post, Req, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { User } from "../../entities/user.entity";
 import { ApiOperation } from "@nestjs/swagger";
 import { UserRegisterDto, UserLoginDto } from "../../dto/user.dto";
 import { plainToInstance } from "class-transformer";
 import { AuthService } from "./auth.service";
 import { UserService } from "../users/user.service";
+import { RefreshAuthGuard } from "./guards/refresh-jwt.guard";
 
 @Controller()
 export class AuthController {
@@ -23,9 +24,16 @@ export class AuthController {
 
     @Post('/login')
     @ApiOperation({ summary: 'Login account' })
-    async login(@Body() userDto: UserLoginDto): Promise<User>{
+    async login(@Req() req, @Body() userDto: UserLoginDto): Promise<any>{
         const user = await this.authService.login(userDto);
 
         return plainToInstance(User, user)
+    }
+
+    @Post("/refresh")
+    @UseGuards(RefreshAuthGuard)
+    @ApiOperation({ summary: 'Refresh token' })
+    refreshToken(@Req() req){
+        return this.authService.refreshToken(req.user.id)
     }
 }

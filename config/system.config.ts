@@ -14,7 +14,12 @@ export class Config {
     postgresDatabase = process.env.POSTGRES_DATABASE
 
     // JWT 
-    JWTKey = process.env.JWT_KEY
+    JWTSecret = process.env.JWT_SECRET
+    JWTExpire = process.env.JWT_EXPIRE_IN
+
+    // REFRESH JWT 
+    RefreshJWTSecret = process.env.REFRESH_JWT_SECRET
+    RefreshJWTExpire = process.env.REFRESH_JWT_EXPIRE_IN
 }
 
 export const configSystem = new Config();

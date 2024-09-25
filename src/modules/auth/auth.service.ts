@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "../../entities/user.entity";
 import { Repository } from "typeorm";
@@ -6,17 +6,19 @@ import { UserLoginDto, UserRegisterDto } from "../../dto/user.dto";
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from "@nestjs/jwt";
 import { UserService } from "../users/user.service";
+import refreshJwtConfig from "../../../config/jwt/refresh-jwt.config";
+import { ConfigType } from "@nestjs/config";
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectRepository(User)
         private usersRepository: Repository<User>,
-        private userService: UserService,
         private jwtService: JwtService,
+        @Inject(refreshJwtConfig.KEY) private refreshTokenConfig: ConfigType<typeof refreshJwtConfig>
     ) {}
 
-    async login(userDto: UserLoginDto): Promise< { accessToken: string } > {
+    async login(userDto: UserLoginDto): Promise< any > {
         const { email, password } = userDto;
 
         const user = await this.usersRepository.findOneBy({ email }) 
@@ -33,15 +35,31 @@ export class AuthService {
         if (passwordMatched) {
             delete user.password;
 
-            const payload = { email: user.email, sub: user.id };
+            const payload = { sub: user.id };
+
+            const accessToken = this.jwtService.sign(payload);
+            const refreshToken = this.jwtService.sign(payload, this.refreshTokenConfig);
         
             return {
-                accessToken: this.jwtService.sign(payload),
+                id: user.id,
+                accessToken,
+                refreshToken
             };
         } else {
             throw new UnauthorizedException("Password does not match"); 
         }
 
+    }
+
+    refreshToken(userId: number) {
+        const payload = { sub: userId };
+
+        const accessToken = this.jwtService.sign(payload);
+
+        return {
+            id: userId,
+            accessToken: accessToken
+        }
     }
 
 }

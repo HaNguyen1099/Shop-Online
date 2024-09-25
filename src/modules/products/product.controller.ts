@@ -4,7 +4,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ProductDto } from "../../dto/product.dto";
 import { Product } from "../../entities/product.entity";
 import { OptionDto } from "../../dto/option.dto";
-import { JwtAuthGuard } from "../auth/passport/jwt-guard";
+import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 
 @ApiTags('products')
 @Controller('products')

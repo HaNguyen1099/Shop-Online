@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, SetMetadata, UseGuards, ValidationPipe } from "@nestjs/common";
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserService } from "./user.service";
 import { User } from "../../entities/user.entity";
-import { JwtAuthGuard } from "../auth/passport/jwt-guard";
+import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { plainToInstance } from "class-transformer";
 import { UserUpdateDto } from "../../dto/user.dto";
 
@@ -33,6 +33,7 @@ export class UserController {
         const user = this.userService.updateProfile(userId, userDto);
         return plainToInstance(User, user);
     }
+
 
     @Delete('delete')
     @UseGuards(JwtAuthGuard)

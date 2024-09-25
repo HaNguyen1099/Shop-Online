@@ -37,7 +37,10 @@ export class UserService {
     }
 
     async getProfile(id: number): Promise<User> {
-        return await this.usersRepository.findOneBy({id: id})
+        return await this.usersRepository.findOne({
+            where: {id},
+            select: ['name', 'username', 'email']
+        })
     }
 
     async updateProfile(id: number, userDto: UserUpdateDto): Promise<User> {

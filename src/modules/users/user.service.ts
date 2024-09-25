@@ -35,5 +35,9 @@ export class UserService {
         
         return this.usersRepository.save(newUser)
     }
+
+    async getUserById(id: number): Promise<User> {
+        return await this.usersRepository.findOneBy({id: id})
+    }
 }
 

@@ -4,6 +4,7 @@ import { UserService } from "./user.service";
 import { User } from "../../entities/user.entity";
 import { JwtAuthGuard } from "../auth/passport/jwt-guard";
 import { plainToInstance } from "class-transformer";
+import { UserUpdateDto } from "../../dto/user.dto";
 
 
 @ApiTags('users')
@@ -16,16 +17,20 @@ export class UserController {
     @UseGuards(JwtAuthGuard)
     @ApiOperation({ summary: 'View profile' })
     async getProfile(@Req() req): Promise<User>{
-        const userId = req.user.userId 
-        const user = this.userService.getUserById(userId);
-        return plainToInstance(User, user)
+        const userId = req.user.userId;
+        const user = this.userService.getProfile(userId);
+        return plainToInstance(User, user);
     }
 
-    // @Patch('updateProfile')
-    // @UseGuards(JwtAuthGuard)
-    // @ApiOperation({ summary: 'Update profile' })
-    // async updateProfile(@Req() req): Promise<User>{
-    //     const userId = req.user.userId 
-        
-    // }
+    @Patch('profile/update')
+    @UseGuards(JwtAuthGuard)
+    @ApiOperation({ summary: 'Update profile' })
+    async updateProfile(
+        @Req() req,
+        @Body() userDto: UserUpdateDto
+    ): Promise<User>{
+        const userId = req.user.userId;
+        const user = this.userService.updateProfile(userId, userDto);
+        return plainToInstance(User, user);
+    }
 }

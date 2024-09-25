@@ -2,7 +2,7 @@ import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/co
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "../../entities/user.entity";
-import { UserRegisterDto } from "../../dto/user.dto";
+import { UserRegisterDto, UserUpdateDto } from "../../dto/user.dto";
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -36,8 +36,14 @@ export class UserService {
         return this.usersRepository.save(newUser)
     }
 
-    async getUserById(id: number): Promise<User> {
+    async getProfile(id: number): Promise<User> {
         return await this.usersRepository.findOneBy({id: id})
+    }
+
+    async updateProfile(id: number, userDto: UserUpdateDto): Promise<User> {
+        await this.usersRepository.update({id: id}, userDto);
+
+        return this.usersRepository.findOneBy({id});
     }
 }
 

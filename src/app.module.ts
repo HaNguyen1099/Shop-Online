@@ -27,30 +27,25 @@ dotenv.config()
       autoLoadEntities: true,
       synchronize: true
     }),
-    MailerModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => ({
-        // transport: config.get("MAIL_TRANSPORT"),
-        transport: {
-          host: config.get("MAIL_HOST"),
-          secure: false,
-          auth: {
-            user: config.get("MAIL_USER"),
-            pass: config.get("MAIL_PASSWORD")
-          },
+    MailerModule.forRoot({
+      transport: {
+        host: configSystem.MailHost,
+        secure: false,
+        auth: {
+          user: configSystem.MailUser,
+          pass: configSystem.MailPassword,
         },
-        defaults: {
-          from: `"No Reply" <${config.get('MAIL_FROM')}>`
+      },
+      defaults: {
+        from: '"No Reply" <configSystem.MAIL_FROM>',
+      },
+      template: {
+        dir: join(__dirname, 'base/email/templates'),
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
         },
-        template: {
-          dir: join(__dirname, 'base/email/templates'),
-          adapter: new HandlebarsAdapter(),
-          option: {
-            strict: true,
-          }
-        }
-      }),
-      inject: [ConfigService],
+      },
     }),
     ProductModule,
     AuthModule,

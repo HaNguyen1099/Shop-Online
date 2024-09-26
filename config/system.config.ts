@@ -20,6 +20,13 @@ export class Config {
     // REFRESH JWT 
     RefreshJWTSecret = process.env.REFRESH_JWT_SECRET
     RefreshJWTExpire = process.env.REFRESH_JWT_EXPIRE_IN
+
+    // EMAIL
+    MailHost = process.env.MAIL_HOST
+    MailUser = process.env.MAIL_USER
+    MailPassword = process.env.MAIL_PASSWORD
+    MailFrom = process.env.MAIL_FROM
+    MailTransport = process.env.MAIL_TRANSPORT
 }
 
 export const configSystem = new Config();

@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
+import { instanceToPlain } from "class-transformer";
 
 @Injectable()
 export class BaseService<T> {
@@ -11,10 +12,15 @@ export class BaseService<T> {
     }
 
     async actionPostCreate(record: T) {
-        return record;
+        return {
+            "success": true,
+            "statusCode": HttpStatus.OK,
+            "message": "Data retrieved success",
+            "data": instanceToPlain(record)
+        }
     }
 
-    async create(dto: Partial<T>): Promise<T>{
+    async create(dto: Partial<T>): Promise<any>{
         const handleDto = await this.actionPreCreate(dto);
 
         const record = await this.repository.save(handleDto);
@@ -27,10 +33,15 @@ export class BaseService<T> {
     }
 
     async actionPostList(records: T[]) {
-        return records;
+        return {
+            "success": true,
+            "statusCode": HttpStatus.OK,
+            "message": "Data retrieved success",
+            "data": instanceToPlain(records)
+        }
     }
 
-    async getList(dto: any): Promise<T[]> {
+    async getList(dto: any): Promise< any > {
         const handleDto = await this.actionPreList(dto);
 
         const records = await this.repository.find(handleDto);
@@ -43,10 +54,15 @@ export class BaseService<T> {
     }
 
     async actionPostDetail(record: T) {
-        return record;
+        return {
+            "success": true,
+            "statusCode": HttpStatus.OK,
+            "message": "Data retrieved success",
+            "data": instanceToPlain(record)
+        }
     }
 
-    async getDetail(id: number): Promise<T> {
+    async getDetail(id: number): Promise<any> {
         const handleId = await this.actionPreDetail(id);
 
         const record = await this.repository.findOneBy({id: handleId});
@@ -59,10 +75,15 @@ export class BaseService<T> {
     }
 
     async actionPostUpdate(record: T) {
-        return record;
+        return {
+            "success": true,
+            "statusCode": HttpStatus.OK,
+            "message": "Data retrieved success",
+            "data": instanceToPlain(record)
+        }
     }
 
-    async update(id: number, dto: Partial<T>): Promise<T> {
+    async update(id: number, dto: Partial<T>): Promise<any> {
         const handleDto = await this.actionPreUpdate(id, dto);
 
         await this.repository.update({id: id}, handleDto);
@@ -77,6 +98,11 @@ export class BaseService<T> {
     }
 
     async actionPostDelete() {
+        return {
+            "success": true,
+            "statusCode": HttpStatus.OK,
+            "message": "Data retrieved success"
+        }
     }
 
     async delete(id: number) {

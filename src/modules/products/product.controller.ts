@@ -22,7 +22,7 @@ export class ProductController {
     @ApiOperation({ summary: 'Create product' })
     async createProduct(
         @Body() productDto: ProductDto
-    ): Promise<Product>{
+    ): Promise<any>{
         return this.productService.create(productDto);
     }
 
@@ -30,7 +30,7 @@ export class ProductController {
     @ApiOperation({ summary: 'Get all products' })
     async getProducts(
         @Query() optionDto: OptionDto
-    ): Promise<Product[]> {
+    ): Promise<any> {
         return this.productService.getList(optionDto);
     }
 
@@ -47,7 +47,7 @@ export class ProductController {
     async updateProduct(
         @Param('id', ParseIntPipe) id: number, 
         @Body() productDto: ProductDto
-    ): Promise<Product>{
+    ): Promise<any>{
         return this.productService.update(id, productDto);
     }
 

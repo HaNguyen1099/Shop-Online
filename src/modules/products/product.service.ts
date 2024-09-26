@@ -26,15 +26,7 @@ export class ProductService extends BaseService<Product> {
             throw new ConflictException(`Product ${title} đã tồn tại!`);
         }
 
-        return super.actionPreCreate(productDto)
-    }
-
-    async actionPostCreate(record: Product){
-        return record
-    }
-
-    async create(productDto: ProductDto): Promise<Product> {
-        return super.create(productDto);
+        return productDto;
     }
 
     async actionPreList(optionDto: OptionDto){
@@ -66,14 +58,6 @@ export class ProductService extends BaseService<Product> {
         return find;
     }
 
-    async actionPostList(record: Product[]){
-        return record;
-    }
-
-    async getList(optionDto: OptionDto): Promise<Product[]> {
-        return super.getList(optionDto);
-    }
-
     async actionPreDetail(id: number){
         const countProduct = await this.productsRepository.count({
             where: { id }
@@ -83,15 +67,7 @@ export class ProductService extends BaseService<Product> {
             throw new NotFoundException(`Product không tồn tại!`);
         }
 
-        return super.actionPreDetail(id)
-    }
-
-    async actionPostDetail(record: Product){
-        return record;
-    }
-
-    async getDetail(id: number): Promise<Product> {
-        return super.getDetail(id);
+        return id;
     }
 
     async actionPreUpdate(id: number, productDto: ProductDto){
@@ -103,15 +79,7 @@ export class ProductService extends BaseService<Product> {
             throw new NotFoundException(`Product không tồn tại!`);
         }
 
-        return super.actionPreUpdate(id, productDto)
-    }
-
-    async actionPostUpdate(record: Product){
-        return record;
-    }
-
-    async update(id: number, productDto: ProductDto): Promise<Product> {
-        return super.update(id, productDto);
+        return productDto;
     }
 
     async actionPreDelete(id: number){
@@ -123,11 +91,7 @@ export class ProductService extends BaseService<Product> {
             throw new NotFoundException(`Product không tồn tại!`);
         }
 
-        return super.actionPreDelete(id)
-    }
-
-    async delete(id: number) {
-        return super.delete(id);
+        return id;
     }
 }
 

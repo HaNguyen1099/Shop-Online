@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, Req, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { User } from "../../entities/user.entity";
 import { ApiOperation } from "@nestjs/swagger";
 import { UserRegisterDto, UserLoginDto } from "../../dto/user.dto";
@@ -6,6 +6,7 @@ import { plainToInstance } from "class-transformer";
 import { AuthService } from "./auth.service";
 import { UserService } from "../users/user.service";
 import { RefreshAuthGuard } from "./guards/refresh-jwt.guard";
+import { JwtAuthGuard } from "./guards/jwt.guard";
 
 @Controller()
 export class AuthController {

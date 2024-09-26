@@ -2,12 +2,12 @@ import { ConflictException, Inject, Injectable, UnauthorizedException } from "@n
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "../../entities/user.entity";
 import { Repository } from "typeorm";
-import { UserLoginDto, UserRegisterDto } from "../../dto/user.dto";
+import { UserLoginDto } from "../../dto/user.dto";
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from "@nestjs/jwt";
-import { UserService } from "../users/user.service";
 import refreshJwtConfig from "../../../config/jwt/refresh-jwt.config";
 import { ConfigType } from "@nestjs/config";
+import { Role } from "../../enums/role.enum";
 
 @Injectable()
 export class AuthService {
@@ -62,4 +62,19 @@ export class AuthService {
         }
     }
 
+    async validateJwtUser(userId: number) {
+        const user = await this.usersRepository.findOneBy({id: userId});
+
+        if (!user) throw new UnauthorizedException("User not found!");
+
+        const currentUser: {
+            id: number,
+            role: Role
+        } = {
+            id: user.id,
+            role: user.role
+        }
+
+        return currentUser;
+    }
 }

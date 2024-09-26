@@ -39,7 +39,7 @@ export class UserService {
     async getProfile(id: number): Promise<User> {
         return await this.usersRepository.findOne({
             where: {id},
-            select: ['name', 'username', 'email']
+            select: ['name', 'username', 'email', 'role']
         })
     }
 

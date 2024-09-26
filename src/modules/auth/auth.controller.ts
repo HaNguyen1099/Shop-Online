@@ -7,18 +7,29 @@ import { AuthService } from "./auth.service";
 import { UserService } from "../users/user.service";
 import { RefreshAuthGuard } from "./guards/refresh-jwt.guard";
 import { JwtAuthGuard } from "./guards/jwt.guard";
+import { MailerService } from "@nestjs-modules/mailer";
 
 @Controller()
 export class AuthController {
     constructor(
         private readonly authService: AuthService,
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly mailerService: MailerService
     ) {}
     
     @Post('/register')
     @ApiOperation({ summary: 'Register account' })
     async register(@Body() userDto: UserRegisterDto): Promise<User>{
         const user = await this.userService.register(userDto);
+
+        await this.mailerService.sendMail({
+            to: userDto.email,
+            subject: "Welcome to my website!",
+            template: "./hello",
+            context: {
+                name: userDto.name
+            }
+        })
 
         return plainToInstance(User, user)
     }

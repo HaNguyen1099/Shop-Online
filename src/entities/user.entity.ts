@@ -1,12 +1,10 @@
 import { Exclude } from "class-transformer";
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 import { Role } from "../enums/role.enum";
+import { BaseEntity } from "../base/entity/base.entity";
 
 @Entity({ name: 'users' })
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 100, nullable: false })
   username: string;
 
@@ -25,10 +23,4 @@ export class User {
 
   @Column({ default: true })
   isActive: boolean;
-
-  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: Date;
-
-  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  updated_at: Date;
 }

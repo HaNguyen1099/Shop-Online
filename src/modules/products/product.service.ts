@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, NotFoundException} from "@nestjs/common";
-import { BaseService } from "../../base/service/basicService";
+import { BaseService } from "../../base/service/base.service";
 import { ProductDto } from "../../dto/product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, ILike, Repository } from "typeorm";

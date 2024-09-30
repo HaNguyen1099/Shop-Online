@@ -8,6 +8,7 @@ import { JwtService } from "@nestjs/jwt";
 import refreshJwtConfig from "../../../config/jwt/refresh-jwt.config";
 import { ConfigType } from "@nestjs/config";
 import { Role } from "../../enums/role.enum";
+import { CurrentUser } from "../../types/user.type";
 
 @Injectable()
 export class AuthService {
@@ -67,10 +68,7 @@ export class AuthService {
 
         if (!user) throw new UnauthorizedException("User not found!");
 
-        const currentUser: {
-            id: number,
-            role: Role
-        } = {
+        const currentUser: CurrentUser = {
             id: user.id,
             role: user.role
         }

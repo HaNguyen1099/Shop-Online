@@ -1,16 +1,27 @@
-import { ConflictException, Injectable, NotFoundException} from "@nestjs/common";
+import { ConflictException, Injectable, Logger, NotFoundException} from "@nestjs/common";
 import { BaseService } from "../../base/service/base.service";
 import { ProductDto } from "../../dto/product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import { FindManyOptions, ILike, Repository } from "typeorm";
+import { FindManyOptions, ILike, Repository, LessThanOrEqual } from "typeorm";
 import { Product } from "../../entities/product.entity";
 import { OptionDto } from "../../dto/option.dto";
+import { User } from "../../entities/user.entity";
+import { MailerService } from "@nestjs-modules/mailer";
+import { Role } from "../../enums/role.enum";
+import { Cron } from "@nestjs/schedule";
 
 @Injectable()
 export class ProductService extends BaseService<Product> {
+    private readonly logger = new Logger(ProductService.name);
+
     constructor(
         @InjectRepository(Product)
         private productsRepository: Repository<Product>,
+
+        @InjectRepository(User)
+        private usersRepository: Repository<User>,
+
+        private readonly mailerService: MailerService
     ){
         super(productsRepository);
     }
@@ -92,6 +103,51 @@ export class ProductService extends BaseService<Product> {
         }
 
         return id;
+    }
+
+    private async sendMail(to: string[], subject: string, template: string, context: any) {
+        await this.mailerService.sendMail({
+            to,
+            subject,
+            template,
+            context,
+        })
+    }
+
+    async notify() {
+        const stock = await this.productsRepository.find({
+            where: { 
+                quantity: LessThanOrEqual(10)
+            }
+        })
+
+        if (stock.length > 0) {
+            const admin = await this.getAdmin();
+
+            for (const user of admin) {
+                await this.sendMail(
+                    [user.email],
+                    "Nhắc nhở nhập hàng",
+                    "./notify",
+                    {
+                        name: user.name,
+                        products: stock
+                    }
+                )
+            }
+        }
+    }
+
+    private async getAdmin() {
+        return await this.usersRepository.find({
+            where: { role: Role.ADMIN }, 
+        });
+    }
+
+    @Cron('0 18 * * 6') // Thay đổi thời gian nếu cần
+    async handleCron() {
+        this.logger.log('Checking stock levels...');
+        await this.notify();
     }
 }
 

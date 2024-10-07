@@ -7,10 +7,10 @@ import { configSystem } from '../config/system.config';
 import { UserModule } from './modules/users/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
+import { ScheduleModule } from '@nestjs/schedule';
 
 dotenv.config()
 
@@ -47,9 +47,10 @@ dotenv.config()
         },
       },
     }),
+    ScheduleModule.forRoot(),
     ProductModule,
     AuthModule,
-    UserModule,
+    UserModule
   ]
 })
 

@@ -1,14 +1,14 @@
 import { Body, Controller, Post, Req, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { User } from "../../entities/user.entity";
-import { ApiOperation } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { UserRegisterDto, UserLoginDto } from "../../dto/user.dto";
 import { plainToInstance } from "class-transformer";
 import { AuthService } from "./auth.service";
 import { UserService } from "../users/user.service";
 import { RefreshAuthGuard } from "./guards/refresh-jwt.guard";
-import { JwtAuthGuard } from "./guards/jwt.guard";
 import { MailerService } from "@nestjs-modules/mailer";
 
+@ApiTags('auth')
 @Controller()
 export class AuthController {
     constructor(

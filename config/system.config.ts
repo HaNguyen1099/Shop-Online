@@ -27,6 +27,10 @@ export class Config {
     MailPassword = process.env.MAIL_PASSWORD
     MailFrom = process.env.MAIL_FROM
     MailTransport = process.env.MAIL_TRANSPORT
+
+    // Redis
+    RedisHost = process.env.REDIS_HOST
+    RedisPort = +process.env.REDIS_PORT
 }
 
 export const configSystem = new Config();

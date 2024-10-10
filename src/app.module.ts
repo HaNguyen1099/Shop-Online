@@ -11,6 +11,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 import { ScheduleModule } from '@nestjs/schedule';
+import { BullModule } from '@nestjs/bullmq';
+import { MailModule } from './modules/mail/mail.module';
 
 dotenv.config()
 
@@ -48,9 +50,16 @@ dotenv.config()
       },
     }),
     ScheduleModule.forRoot(),
+    BullModule.forRoot({
+      connection: {
+        host: configSystem.RedisHost,
+        port: configSystem.RedisPort,
+      },
+    }),
     ProductModule,
     AuthModule,
-    UserModule
+    UserModule,
+    MailModule
   ]
 })
 

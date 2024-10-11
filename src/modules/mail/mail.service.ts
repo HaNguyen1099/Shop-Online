@@ -61,7 +61,7 @@ export class MailService {
         });
     }
 
-    @Cron(CronExpression.EVERY_10_SECONDS) // Thay đổi thời gian nếu cần
+    @Cron('0 18 * * 6') // Thay đổi thời gian nếu cần
     async handleCron() {
         this.logger.log('Checking stock levels...');
         await this.notify();

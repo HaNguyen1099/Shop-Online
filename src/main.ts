@@ -13,6 +13,7 @@ async function bootstrap() {
     .setDescription('API for NestJS project')
     .setVersion('1.0')
     .addTag('nestjs')
+    .addBearerAuth()
     .build();
   
   app.useGlobalPipes(new ValidationPipe({

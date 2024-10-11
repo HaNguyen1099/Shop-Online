@@ -31,6 +31,11 @@ export class Config {
     // Redis
     RedisHost = process.env.REDIS_HOST
     RedisPort = +process.env.REDIS_PORT
+
+    // Cloudinary
+    CloudName = process.env.CLOUD_NAME
+    CloudKey = process.env.CLOUD_KEY
+    CloudSecret = process.env.CLOUD_SECRET
 }
 
 export const configSystem = new Config();

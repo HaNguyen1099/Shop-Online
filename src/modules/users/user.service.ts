@@ -52,5 +52,11 @@ export class UserService {
     async deleteUser(id: number) {
         return await this.usersRepository.delete({id: id})
     }
+
+    async uploadAvatar(id: number, url: string) {
+        await this.usersRepository.update({id: id}, {avatar: url});
+
+        return this.usersRepository.findOneBy({id});
+    }
 }
 

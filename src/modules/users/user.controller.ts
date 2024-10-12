@@ -9,7 +9,7 @@ import { Roles } from "../../decorators/role.decorator";
 import { Role } from "../../enums/role.enum";
 import { RolesGuard } from "../auth/guards/roles/roles.guard";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { CloudinaryService } from "../cloudinary/cloudinary.service";
+import { CloudinaryService } from "../../base/cloudinary/cloudinary.service";
 
 @Roles(Role.USER)
 @ApiTags('users')

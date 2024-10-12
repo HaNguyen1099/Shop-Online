@@ -14,4 +14,7 @@ export class Product extends BaseEntity {
 
   @Column({ type: 'int', default: 0 })
   quantity: number;
+
+  @Column({ type: 'text', array: true, nullable: true })
+  images: string[];
 }

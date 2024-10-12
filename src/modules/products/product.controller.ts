@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors, ValidationPipe } from "@nestjs/common";
 import { ProductService } from "./product.service";
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ProductDto } from "../../dto/product.dto";
 import { Product } from "../../entities/product.entity";
 import { OptionDto } from "../../dto/option.dto";
@@ -20,9 +20,31 @@ export class ProductController {
     @Roles(Role.ADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @ApiOperation({ summary: 'Create product' })
+    @ApiConsumes('multipart/form-data')
+    @ApiBearerAuth()
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+            title: { type: 'string' },
+            description: { type: 'string' },
+            price: { type: 'number' },
+            images: {
+                type: 'array',
+                items: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+            },
+        },
+    })
     async createProduct(
-        @Body() productDto: ProductDto
+        @Body() productDto: ProductDto,
+        @Req() req: any
     ): Promise<any>{
+        productDto.images = req.body.images;
+
         return this.productService.create(productDto);
     }
 
@@ -44,10 +66,32 @@ export class ProductController {
     @Roles(Role.ADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @ApiOperation({ summary: 'Update product' })
+    @ApiConsumes('multipart/form-data')
+    @ApiBearerAuth()
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+            title: { type: 'string' },
+            description: { type: 'string' },
+            price: { type: 'number' },
+            images: {
+                type: 'array',
+                items: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+            },
+        },
+    })
     async updateProduct(
         @Param('id', ParseIntPipe) id: number, 
-        @Body() productDto: ProductDto
+        @Body() productDto: ProductDto,
+        @Req() req: any
     ): Promise<any>{
+        productDto.images = req.body.images;
+
         return this.productService.update(id, productDto);
     }
 

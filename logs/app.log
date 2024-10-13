@@ -14,3 +14,13 @@
 [2024-10-13T17:33:49.751] [ERROR] default - Failed to delete product!NotFoundException: Product không tồn tại!
 [2024-10-13T17:34:18.788] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
 [2024-10-13T17:34:18.794] [ERROR] default - Failed to delete product! NotFoundException: Product không tồn tại!
+[2024-10-13T17:49:11.204] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
+[2024-10-13T17:50:20.554] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
+[2024-10-13T17:52:19.385] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
+[2024-10-13T17:52:19.389] [ERROR] default - Failed to delete product! NotFoundException: Product không tồn tại!
+[2024-10-13T17:52:31.968] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
+[2024-10-13T17:52:31.971] [ERROR] default - Failed to delete product! NotFoundException: Product không tồn tại!
+[2024-10-13T17:55:26.428] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
+[2024-10-13T18:00:49.839] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
+[2024-10-13T18:06:23.424] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
+[2024-10-13T18:06:23.440] [INFO] default - Request for update product with ID: 2

@@ -5,7 +5,7 @@ import { Queue } from 'bullmq';
 import { User } from '../../entities/user.entity';
 import { LessThanOrEqual, Repository } from 'typeorm';
 import { Product } from '../../entities/product.entity';
-import { Role } from '../../enums/role.enum';
+import { Role } from '../../base/enums/role.enum';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()

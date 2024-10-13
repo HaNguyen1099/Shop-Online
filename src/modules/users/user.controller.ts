@@ -5,11 +5,13 @@ import { User } from "../../entities/user.entity";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { plainToInstance } from "class-transformer";
 import { UserUpdateDto } from "../../dto/user.dto";
-import { Roles } from "../../decorators/role.decorator";
-import { Role } from "../../enums/role.enum";
+import { Roles } from "../../base/decorators/role.decorator";
+import { Role } from "../../base/enums/role.enum";
 import { RolesGuard } from "../auth/guards/roles/roles.guard";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CloudinaryService } from "../../base/cloudinary/cloudinary.service";
+import { ApiFile } from "../../base/decorators/api.decorator";
+import { FileValidationPipe } from "../../base/validates/file.validate";
 
 @Roles(Role.USER)
 @ApiTags('users')
@@ -53,30 +55,13 @@ export class UserController {
     @Post('upload-avatar')
     @ApiOperation({ summary: 'Upload a file with authentication' })
     @ApiConsumes('multipart/form-data')
-    @ApiBody({
-        schema: {
-        type: 'object',
-        properties: {
-            avatar: {
-                type: 'string',
-                format: 'binary',
-            },
-        },
-        },
-    })
+    @ApiFile('avatar')
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseGuards(JwtAuthGuard)
     @UseInterceptors(FileInterceptor('avatar'))
     async uploadAvatar(
         @Req() req: any, 
-        @UploadedFile(
-            new ParseFilePipe({
-                validators: [
-                  new MaxFileSizeValidator({ maxSize: 2 * 1024 * 1024 }),
-                  new FileTypeValidator({ fileType: 'image/(jpeg|jpg|png)' }),
-                ],
-              }),
-        ) file: Express.Multer.File
+        @UploadedFile(FileValidationPipe) file: Express.Multer.File
     ){
         const userId = req.user.id;
         if (!file) {

@@ -7,8 +7,8 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from "@nestjs/jwt";
 import refreshJwtConfig from "../../../config/jwt/refresh-jwt.config";
 import { ConfigType } from "@nestjs/config";
-import { Role } from "../../enums/role.enum";
-import { CurrentUser } from "../../types/user.type";
+import { Role } from "../../base/enums/role.enum";
+import { CurrentUser } from "../../base/types/user.type";
 
 @Injectable()
 export class AuthService {

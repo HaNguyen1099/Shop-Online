@@ -5,9 +5,10 @@ import { ProductDto } from "../../dto/product.dto";
 import { Product } from "../../entities/product.entity";
 import { OptionDto } from "../../dto/option.dto";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
-import { Roles } from "../../decorators/role.decorator";
-import { Role } from "../../enums/role.enum";
+import { Roles } from "../../base/decorators/role.decorator";
+import { Role } from "../../base/enums/role.enum";
 import { RolesGuard } from "../auth/guards/roles/roles.guard";
+import { ApiFiles } from "../../base/decorators/api.decorator";
 
 
 @ApiTags('products')
@@ -22,23 +23,7 @@ export class ProductController {
     @ApiOperation({ summary: 'Create product' })
     @ApiConsumes('multipart/form-data')
     @ApiBearerAuth()
-    @ApiBody({
-        schema: {
-            type: 'object',
-            properties: {
-            title: { type: 'string' },
-            description: { type: 'string' },
-            price: { type: 'number' },
-            images: {
-                type: 'array',
-                items: {
-                    type: 'string',
-                    format: 'binary',
-                },
-            },
-            },
-        },
-    })
+    @ApiFiles('images')
     async createProduct(
         @Body() productDto: ProductDto,
         @Req() req: any
@@ -68,23 +53,7 @@ export class ProductController {
     @ApiOperation({ summary: 'Update product' })
     @ApiConsumes('multipart/form-data')
     @ApiBearerAuth()
-    @ApiBody({
-        schema: {
-            type: 'object',
-            properties: {
-            title: { type: 'string' },
-            description: { type: 'string' },
-            price: { type: 'number' },
-            images: {
-                type: 'array',
-                items: {
-                    type: 'string',
-                    format: 'binary',
-                },
-            },
-            },
-        },
-    })
+    @ApiFiles('images')
     async updateProduct(
         @Param('id', ParseIntPipe) id: number, 
         @Body() productDto: ProductDto,

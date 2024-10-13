@@ -15,19 +15,19 @@ export class LoggerService {
     });
   }
 
-  log(message: string) {
-    this.logger.log(message);
+  log(message: string, ...optionalParams: any[]) {
+    this.logger.log(message + optionalParams);
   }
 
-  error(message: string) {
-    this.logger.error(message);
+  error(message: string, ...optionalParams: any[]) {
+    this.logger.error(message + optionalParams);
   }
 
-  warn(message: string) {
-    this.logger.warn(message);
+  warn(message: string, ...optionalParams: any[]) {
+    this.logger.warn(message + optionalParams);
   }
 
-  debug(message: string) {
-    this.logger.debug(message);
+  debug(message: string, ...optionalParams: any[]) {
+    this.logger.debug(message + optionalParams);
   }
 }

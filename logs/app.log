@@ -2,3 +2,15 @@
 [2024-10-13T16:53:09.984] [INFO] default - Request for all products!
 [2024-10-13T16:57:35.941] [INFO] default - Request for all products!
 [2024-10-13T16:59:45.746] [INFO] default - Request for delete product!
+[2024-10-13T17:08:53.006] [INFO] default - Checking role: [object Object]
+[2024-10-13T17:08:53.026] [INFO] default - Request for delete product!
+[2024-10-13T17:09:52.596] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
+[2024-10-13T17:18:58.128] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
+[2024-10-13T17:18:58.147] [INFO] default - Request for delete: 20
+[2024-10-13T17:20:14.030] [INFO] default - Request for get detail: {"id":18,"created_at":"2024-09-23T07:32:46.891Z","update_at":"2024-09-30T13:50:28.522Z","title":"Iphone 12","description":"Iphone 12","price":1000,"quantity":100,"images":null}
+[2024-10-13T17:33:38.340] [INFO] default - Request for get list product!
+[2024-10-13T17:33:45.730] [INFO] default - Request for get detail product with ID: 18
+[2024-10-13T17:33:49.749] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
+[2024-10-13T17:33:49.751] [ERROR] default - Failed to delete product!NotFoundException: Product không tồn tại!
+[2024-10-13T17:34:18.788] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
+[2024-10-13T17:34:18.794] [ERROR] default - Failed to delete product! NotFoundException: Product không tồn tại!

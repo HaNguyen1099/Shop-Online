@@ -1,9 +1,11 @@
-import { HttpStatus, Injectable } from "@nestjs/common";
+import { HttpStatus, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { instanceToPlain } from "class-transformer";
 import { LoggerService } from "../logger/logger.service";
 
 @Injectable()
 export class BaseService<T> {
+    protected entityName: string = "Entity";
+
     constructor(
         protected readonly repository,
         protected readonly logger: LoggerService,
@@ -14,7 +16,8 @@ export class BaseService<T> {
     }
 
     async actionPostCreate(record: T) {
-        this.logger.log("Request for create product!")
+        const recordId = record['id']; 
+        this.logger.log(`Request for create ${this.entityName} with ID: ${recordId}`);
 
         return {
             "success": true,
@@ -25,11 +28,14 @@ export class BaseService<T> {
     }
 
     async create(dto: Partial<T>): Promise<any>{
-        const handleDto = await this.actionPreCreate(dto);
-
-        const record = await this.repository.save(handleDto);
-
-        return this.actionPostCreate(record);
+        try {
+            const handleDto = await this.actionPreCreate(dto);
+            const record = await this.repository.save(handleDto);
+            return await this.actionPostCreate(record);
+        } catch (error) {
+            this.logger.error(`Failed to create ${this.entityName}! `, error);
+            throw new InternalServerErrorException(`Failed to create ${this.entityName}!`);
+        }
     }
 
     async actionPreList(dto: any) {
@@ -37,7 +43,7 @@ export class BaseService<T> {
     }
 
     async actionPostList(records: T[]) {
-        this.logger.log("Request for all products!")
+        this.logger.log(`Request for get list ${this.entityName}!`)
 
         return {
             "success": true,
@@ -48,11 +54,14 @@ export class BaseService<T> {
     }
 
     async getList(dto: any): Promise< any > {
-        const handleDto = await this.actionPreList(dto);
-
-        const records = await this.repository.find(handleDto);
-
-        return this.actionPostList(records);
+        try {
+            const handleDto = await this.actionPreList(dto);
+            const records = await this.repository.find(handleDto);
+            return this.actionPostList(records);
+        } catch (error) {
+            this.logger.error(`Failed to get list ${this.entityName}! `, error);
+            throw new InternalServerErrorException(`Failed to get list ${this.entityName}!`);
+        }
     }
 
     async actionPreDetail(id: number) {
@@ -60,7 +69,8 @@ export class BaseService<T> {
     }
 
     async actionPostDetail(record: T) {
-        this.logger.log("Request for get detail product!")
+        const recordId = record['id']; 
+        this.logger.log(`Request for get detail ${this.entityName} with ID: ${recordId}`);
 
         return {
             "success": true,
@@ -71,11 +81,14 @@ export class BaseService<T> {
     }
 
     async getDetail(id: number): Promise<any> {
-        const handleId = await this.actionPreDetail(id);
-
-        const record = await this.repository.findOneBy({id: handleId});
-
-        return this.actionPostDetail(record);
+        try {
+            const handleId = await this.actionPreDetail(id);
+            const record = await this.repository.findOneBy({id: handleId});
+            return this.actionPostDetail(record);
+        } catch (error) {
+            this.logger.error(`Failed to get detail ${this.entityName}! `, error);
+            throw new InternalServerErrorException(`Failed to get detail ${this.entityName}!`);
+        }
     }
 
     async actionPreUpdate(id: number, dto: Partial<T>) {
@@ -83,7 +96,8 @@ export class BaseService<T> {
     }
 
     async actionPostUpdate(record: T) {
-        this.logger.log("Request for update product!")
+        const recordId = record['id']; 
+        this.logger.log(`Request for update ${this.entityName} with ID: ${recordId}`);
 
         return {
             "success": true,
@@ -94,21 +108,23 @@ export class BaseService<T> {
     }
 
     async update(id: number, dto: Partial<T>): Promise<any> {
-        const handleDto = await this.actionPreUpdate(id, dto);
-
-        await this.repository.update({id: id}, handleDto);
-
-        const updatedRecord = await this.repository.findOneBy({ id: id });
-
-        return this.actionPostUpdate(updatedRecord);
+        try {
+            const handleDto = await this.actionPreUpdate(id, dto);
+            await this.repository.update({id: id}, handleDto);
+            const updatedRecord = await this.repository.findOneBy({ id: id });
+            return this.actionPostUpdate(updatedRecord);
+        } catch (error) {
+            this.logger.error(`Failed to update ${this.entityName}! `, error);
+            throw new InternalServerErrorException(`Failed to update ${this.entityName}!`);
+        }
     }
 
     async actionPreDelete(id: number) {
         return id;
     }
 
-    async actionPostDelete() {
-        this.logger.log("Request for delete product!")
+    async actionPostDelete(id: number) {
+        this.logger.log(`Request for create ${this.entityName} with ID: ${id}`);
 
         return {
             "success": true,
@@ -118,10 +134,13 @@ export class BaseService<T> {
     }
 
     async delete(id: number) {
-        const handleId = await this.actionPreDelete(id);
-
-        await this.repository.delete(handleId);
-
-        return this.actionPostDelete()
+        try {
+            const handleId = await this.actionPreDelete(id);
+            await this.repository.delete(handleId);
+            return this.actionPostDelete(id);
+        } catch (error) {
+            this.logger.error(`Failed to delete ${this.entityName}! `, error);
+            throw new InternalServerErrorException(`Failed to delete ${this.entityName}!`);
+        }
     }
 }

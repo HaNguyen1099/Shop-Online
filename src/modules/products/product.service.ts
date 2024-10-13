@@ -6,10 +6,11 @@ import { FindManyOptions, ILike, Repository } from "typeorm";
 import { Product } from "../../entities/product.entity";
 import { OptionDto } from "../../dto/option.dto";
 import { LoggerService } from "../../base/logger/logger.service";
-import { instanceToPlain } from "class-transformer";
 
 @Injectable()
 export class ProductService extends BaseService<Product> {
+    protected entityName: string = "product";
+
     constructor(
         protected readonly logger: LoggerService,
 
@@ -31,17 +32,6 @@ export class ProductService extends BaseService<Product> {
         }
 
         return productDto;
-    }
-
-    async actionPostList(records: Product[]): Promise<any> {
-        this.logger.log("Request for all products!")
-
-        return {
-            "success": true,
-            "statusCode": HttpStatus.OK,
-            "message": "Data retrieved success",
-            "data": instanceToPlain(records)
-        }
     }
 
     async actionPreList(optionDto: OptionDto){

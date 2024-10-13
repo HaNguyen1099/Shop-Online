@@ -12,6 +12,7 @@ import { ConfigModule } from "@nestjs/config";
 import jwtConfig from "../../../config/jwt/jwt.config";
 import refreshJwtConfig from "../../../config/jwt/refresh-jwt.config";
 import { RefreshJWTStrategy } from "./strategies/refresh.strategy";
+import { LoggerModule } from "../../base/logger/logger.module";
 
 @Module({
     imports: [
@@ -20,7 +21,8 @@ import { RefreshJWTStrategy } from "./strategies/refresh.strategy";
         UserModule,
         JwtModule.registerAsync(jwtConfig.asProvider()),
         ConfigModule.forFeature(jwtConfig),
-        ConfigModule.forFeature(refreshJwtConfig)
+        ConfigModule.forFeature(refreshJwtConfig),
+        LoggerModule
     ],
     controllers: [AuthController],
     providers: [AuthService, JWTStrategy, RefreshJWTStrategy],

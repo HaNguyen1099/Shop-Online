@@ -13,6 +13,7 @@ import { join } from 'path';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BullModule } from '@nestjs/bullmq';
 import { MailModule } from './modules/mail/mail.module';
+import { LoggerModule } from './base/logger/logger.module';
 
 dotenv.config()
 
@@ -59,7 +60,8 @@ dotenv.config()
     ProductModule,
     AuthModule,
     UserModule,
-    MailModule
+    MailModule,
+    LoggerModule
   ]
 })
 

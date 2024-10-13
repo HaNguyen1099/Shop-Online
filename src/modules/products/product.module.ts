@@ -6,11 +6,13 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "../../entities/user.entity";
 import { UploadFilesMiddleware } from "../../middleware/uploadFiles.middleware";
 import { CloudinaryModule } from "../../base/cloudinary/cloudinary.module";
+import { LoggerModule } from "../../base/logger/logger.module";
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([Product, User]),
-        CloudinaryModule
+        CloudinaryModule,
+        LoggerModule
     ],
     controllers: [ProductController],
     providers: [ProductService]
@@ -23,6 +25,6 @@ export class ProductModule implements NestModule {
         .forRoutes(
             { path: 'products/create', method: RequestMethod.POST },
             { path: 'products/edit/:id', method: RequestMethod.PATCH }
-        ); // Chỉ định route cần áp dụng middleware
+        ); 
     }
 }

@@ -1,10 +1,12 @@
-import { HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
+import { HttpStatus, Injectable } from "@nestjs/common";
 import { instanceToPlain } from "class-transformer";
+import { LoggerService } from "../logger/logger.service";
 
 @Injectable()
 export class BaseService<T> {
     constructor(
         protected readonly repository,
+        protected readonly logger: LoggerService,
     ){}
 
     async actionPreCreate(dto: Partial<T>) {
@@ -12,6 +14,8 @@ export class BaseService<T> {
     }
 
     async actionPostCreate(record: T) {
+        this.logger.log("Request for create product!")
+
         return {
             "success": true,
             "statusCode": HttpStatus.OK,
@@ -33,6 +37,8 @@ export class BaseService<T> {
     }
 
     async actionPostList(records: T[]) {
+        this.logger.log("Request for all products!")
+
         return {
             "success": true,
             "statusCode": HttpStatus.OK,
@@ -54,6 +60,8 @@ export class BaseService<T> {
     }
 
     async actionPostDetail(record: T) {
+        this.logger.log("Request for get detail product!")
+
         return {
             "success": true,
             "statusCode": HttpStatus.OK,
@@ -75,6 +83,8 @@ export class BaseService<T> {
     }
 
     async actionPostUpdate(record: T) {
+        this.logger.log("Request for update product!")
+
         return {
             "success": true,
             "statusCode": HttpStatus.OK,
@@ -98,6 +108,8 @@ export class BaseService<T> {
     }
 
     async actionPostDelete() {
+        this.logger.log("Request for delete product!")
+
         return {
             "success": true,
             "statusCode": HttpStatus.OK,

@@ -30,6 +30,7 @@
     "cloudinary": "^2.5.1",
     "dotenv": "^16.4.5",
     "hbs": "^4.2.0",
+    "log4js": "^6.9.1",
     "mysql2": "^3.11.3",
     "nodemailer": "^6.9.15",
     "passport": "^0.7.0",

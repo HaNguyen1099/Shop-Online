@@ -98,5 +98,23 @@ export class ProductService extends BaseService<Product> {
 
         return id;
     }
+
+    async uploadExcel(data: any[]) {
+        const products = data.map(item => {
+            const product = new Product();
+
+            product.title = item.title;
+            product.description = item.description;
+            product.price = item.price;
+            product.quantity = item.quantity;
+            product.created_at = item.created_at;
+            product.update_at = item.update_at;
+            product.images = item.images;
+
+            return product;
+        })
+
+        await this.productsRepository.save(products);
+    }
 }
 

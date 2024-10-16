@@ -13,9 +13,9 @@ import { CloudinaryService } from "../../base/cloudinary/cloudinary.service";
 import { ApiFile } from "../../base/decorators/api.decorator";
 import { FileValidationPipe } from "../../base/validates/file.validate";
 
-@Roles(Role.USER)
 @ApiTags('users')
 @Controller('users')
+@ApiBearerAuth()
 
 export class UserController {
     constructor(
@@ -56,7 +56,6 @@ export class UserController {
     @ApiOperation({ summary: 'Upload a file with authentication' })
     @ApiConsumes('multipart/form-data')
     @ApiFile('avatar')
-    @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(FileInterceptor('avatar'))
     async uploadAvatar(

@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Patch, Post, Query, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, ValidationPipe } from "@nestjs/common";
 import { ProductService } from "./product.service";
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ProductDto } from "../../dto/product.dto";
 import { Product } from "../../entities/product.entity";
 import { OptionDto } from "../../dto/option.dto";
@@ -8,8 +8,9 @@ import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { Roles } from "../../base/decorators/role.decorator";
 import { Role } from "../../base/enums/role.enum";
 import { RolesGuard } from "../auth/guards/roles/roles.guard";
-import { ApiFiles } from "../../base/decorators/api.decorator";
-
+import { ApiExcel, ApiFiles } from "../../base/decorators/api.decorator";
+import { FileInterceptor } from "@nestjs/platform-express";
+import * as XLSX from 'xlsx';
 
 @ApiTags('products')
 @Controller('products')
@@ -70,5 +71,35 @@ export class ProductController {
     @ApiOperation({ summary: 'Delete product' })
     async deleteProduct(@Param('id') id: number) {
         return this.productService.delete(id);
+    }
+
+    @Post('/uploadExcel')
+    @Roles(Role.ADMIN)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @ApiOperation({ summary: 'Upload file excel' })
+    @ApiBearerAuth()
+    @ApiConsumes('multipart/form-data')
+    @ApiExcel('file')
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadExcel(
+        @UploadedFile() file: Express.Multer.File
+    ): Promise<any>{
+        if (!file) {
+            throw new HttpException('File not found', HttpStatus.BAD_REQUEST);
+        }
+    
+        // Đọc nội dung file Excel
+        const workbook = XLSX.read(file.buffer, { type: 'buffer' });
+        const sheetNames = workbook.SheetNames;
+        const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNames[0]]);
+    
+        // Lưu dữ liệu vào database
+        await this.productService.uploadExcel(data);
+    
+        return {
+            "success": true,
+            "statusCode": HttpStatus.OK,
+            "message": "File uploaded and data saved successfully!"
+        }
     }
 }

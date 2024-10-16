@@ -24,3 +24,6 @@
 [2024-10-13T18:00:49.839] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
 [2024-10-13T18:06:23.424] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
 [2024-10-13T18:06:23.440] [INFO] default - Request for update product with ID: 2
+[2024-10-16T22:15:25.320] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
+[2024-10-16T22:17:37.214] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}
+[2024-10-16T22:19:36.030] [INFO] default - Checking role: {"id":16,"role":"ADMIN"}

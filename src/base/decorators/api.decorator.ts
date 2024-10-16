@@ -48,3 +48,21 @@ export function ApiFiles(fieldName: string = 'file', required: boolean = true) {
         }),
     );
 }
+
+export function ApiExcel(fieldName: string = 'file', required: boolean = true) {
+    return applyDecorators(
+        ApiConsumes('multipart/form-data'),
+        ApiBody({
+            schema: {
+                type: 'object',
+                properties: {
+                    [fieldName]: {
+                        type: 'string',
+                        format: 'binary'
+                    },
+                },
+                required: required ? [fieldName] : [],
+            },
+        }),
+    );
+}

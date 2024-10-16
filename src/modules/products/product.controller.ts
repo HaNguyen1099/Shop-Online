@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Patch, Post, Query, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Patch, Post, Query, Req, Res, StreamableFile, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ProductDto } from "../../dto/product.dto";
@@ -101,5 +101,14 @@ export class ProductController {
             "statusCode": HttpStatus.OK,
             "message": "File uploaded and data saved successfully!"
         }
+    }
+
+    @Get('/exportExcel')
+    @Roles(Role.ADMIN)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @ApiOperation({ summary: 'Export file excel' })
+    @ApiBearerAuth()
+    async exportExcel(@Res({ passthrough: true }) res: Response): Promise<StreamableFile>{
+        return await this.productService.exportExcel(res);
     }
 }

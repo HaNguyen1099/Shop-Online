@@ -1,4 +1,4 @@
-import { ConflictException, HttpStatus, Injectable, NotFoundException} from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException, StreamableFile} from "@nestjs/common";
 import { BaseService } from "../../base/service/base.service";
 import { ProductDto } from "../../dto/product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -6,6 +6,8 @@ import { FindManyOptions, ILike, Repository } from "typeorm";
 import { Product } from "../../entities/product.entity";
 import { OptionDto } from "../../dto/option.dto";
 import { LoggerService } from "../../base/logger/logger.service";
+import * as XLSX from 'xlsx';
+import { Readable } from "stream";
 
 @Injectable()
 export class ProductService extends BaseService<Product> {
@@ -115,6 +117,29 @@ export class ProductService extends BaseService<Product> {
         })
 
         await this.productsRepository.save(products);
+    }
+
+    async exportExcel(res: Response) {
+        // Bước 1: Lấy dữ liệu từ PostgreSQL
+        const products = await this.productsRepository.find(); 
+
+        // Bước 2: Chuyển đổi dữ liệu thành định dạng sheet Excel
+        const worksheet = XLSX.utils.json_to_sheet(products);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Products');
+
+        // Bước 3: Chuyển đổi workbook thành file Excel
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+
+        // Bước 4: Gửi file Excel về client để download
+        const stream = new Readable();
+        stream.push(excelBuffer);
+        stream.push(null);  // Không còn dữ liệu để đọc
+
+        return new StreamableFile(stream, {
+            disposition: 'attachment; filename=products.xlsx',
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
     }
 }
 
